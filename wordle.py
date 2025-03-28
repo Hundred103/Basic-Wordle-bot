@@ -15,6 +15,7 @@ def matches_pattern(word, pattern):
     yellow_letters = set()
     yellow_positions = {}
     gray_letters = set()
+    letter_counts = {}
 
     word_index = 0
     pattern_index = 0
@@ -40,14 +41,24 @@ def matches_pattern(word, pattern):
             gray_letters.add(current_letter)
             pattern_index += 1
 
+        letter_counts[word[word_index]] = letter_counts.get(word[word_index], 0) + 1
         word_index += 1
 
     for pos, letter in yellow_positions.items():
         if letter not in word or word[pos] == letter:
             return False
 
-    if any(letter in word for letter in gray_letters):
-        return False
+    word_letter_counts = {}
+    for letter in word:
+        word_letter_counts[letter] = word_letter_counts.get(letter, 0) + 1
+
+    for letter in gray_letters:
+        if letter in green_positions.values() or letter in yellow_letters:
+            if word_letter_counts.get(letter, 0) > letter_counts.get(letter, 0):
+                return False
+        else:
+            if word_letter_counts.get(letter, 0) > 0:
+                return False
 
     return True
 
@@ -73,6 +84,7 @@ def wordle_solver(filename, patterns):
 
     for pattern in patterns:
         filtered_words = [word for word in filtered_words if matches_pattern(word, pattern)]
+        print(filtered_words)
         used_letters.update(set(pattern.replace("*", "").replace("+", "")))
 
     return best_next_word(words, filtered_words, used_letters)

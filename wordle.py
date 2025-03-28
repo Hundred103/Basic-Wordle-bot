@@ -84,7 +84,6 @@ def wordle_solver(filename, patterns):
 
     for pattern in patterns:
         filtered_words = [word for word in filtered_words if matches_pattern(word, pattern)]
-        print(filtered_words)
         used_letters.update(set(pattern.replace("*", "").replace("+", "")))
 
     return best_next_word(words, filtered_words, used_letters)
@@ -99,9 +98,12 @@ def main():
     print(f"Starter word: {get_starter_word()}")
 
     while True:
-        pattern = input("Enter pattern (or 'exit' to quit): ").strip()
+        pattern = input("Enter pattern (or: 'exit' to quit, 'back' to go back to previous game state): ").strip()
         if pattern.lower() == "exit":
             break
+        if pattern.lower() == "back":
+            patterns.pop()
+            continue
         patterns.append(pattern)
         best_word = wordle_solver(filename, patterns)
         if best_word:

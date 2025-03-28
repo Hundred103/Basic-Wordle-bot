@@ -75,7 +75,6 @@ def wordle_solver(filename, patterns):
         filtered_words = [word for word in filtered_words if matches_pattern(word, pattern)]
         used_letters.update(set(pattern.replace("*", "").replace("+", "")))
 
-    print(filtered_words)
     return best_next_word(words, filtered_words, used_letters)
 
 
